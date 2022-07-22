@@ -1,0 +1,11 @@
+{
+    "basePath":"./protobuf",
+    "outputRootPath" : "./",
+
+    "target" : [
+        {
+            "lang" : "go",
+            "output" : "service/common"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "proto/service/user";
+
+message Request{
+
+}
