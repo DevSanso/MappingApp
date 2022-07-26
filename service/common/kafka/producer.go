@@ -7,38 +7,43 @@ import (
 
 
 
-type Producer[T ByteDecoder] struct {
+type producer[T ByteDecoder] struct {
 	origin *module.Producer
 }
 
 
-func NewProducer[T ByteDecoder](config *ProducerConfig) Producer[T] {
+func newProducer[T ByteDecoder](config *ProducerConfig)producer[T] {
 	p,err := module.NewProducer(config.toConfigMap())
 	if err != nil {panic(err)}
-	return Producer[T]{origin : p}
+	return producer[T]{origin : p}
 }
 
 
-func makeMessage[T ByteDecoder](key []byte,topic string,data T) module.Message {
-	if(key == nil) {
-		return module.Message{
-			Value : data.Decode(),
+func makeMessage[T ByteDecoder](key []byte,topic string,data T) (*module.Message,error) {
+	d,err := data.Decode()
+
+	if err != nil {return nil,err}
+
+	if key == nil {
+		return &module.Message{
+			Value : d,
 			TopicPartition: module.TopicPartition{Topic: &topic,Partition: module.PartitionAny},
-		}
+		},nil
 	}
-	return module.Message{
-		Value : data.Decode(),
+	return &module.Message{
+		Value : d,
 		TopicPartition: module.TopicPartition{Topic: &topic,Partition: module.PartitionAny},
 		Key: key,
-	}
+	},nil
 }
 
 func sendMessage[T ByteDecoder](origin *module.Producer,key []byte,topic string,data T)error {
-	message := makeMessage(key,topic,data)
-	return origin.Produce(&message, nil)
+	message,err := makeMessage(key,topic,data)
+	if err != nil {return err}
+	return origin.Produce(message, nil)
 }
 
-func (p *Producer[T])Send(topic string,data []T,key []byte) (err error) {
+func (p *producer[T])Send(topic string,data []T,key []byte) (err error) {
 	for _,message := range data {
 		err = sendMessage(p.origin,key,topic,message)
 		if err != nil {return}
@@ -46,5 +51,5 @@ func (p *Producer[T])Send(topic string,data []T,key []byte) (err error) {
 	return
 }
 
-func (p *Producer[T])Close() {p.origin.Close()}
+func (p *producer[T])Close() {p.origin.Close()}
 

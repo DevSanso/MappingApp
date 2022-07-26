@@ -4,5 +4,5 @@ package kafka
 
 
 type ByteDecoder interface {
-	Decode() []byte
+	Decode() ([]byte,error)
 }
