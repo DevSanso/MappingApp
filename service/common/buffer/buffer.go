@@ -18,7 +18,7 @@ func NewBuffer[T any]() *Buffer[T] {
 	return buf
 }
 
-func (b *Buffer[T])swapBuffer() {
+func (b *Buffer[T])SwapBuffer() {
 	b.mtx.Lock()
 	b.mtx.RLock()
 	defer b.mtx.Unlock()
