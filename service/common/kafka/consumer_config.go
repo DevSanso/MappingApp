@@ -10,6 +10,7 @@ type ConsumersConfig[T any] struct{
 	GroupID string
 	Offset string
 	Count int
+	Topic string
 	EncodeMessageFunc func([]byte) (T,error)
 }
 
