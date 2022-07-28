@@ -4,6 +4,7 @@ import (
 	"common/buffer"
 	"context"
 	"sync"
+	"errors"
 	"time"
 
 )
@@ -99,7 +100,7 @@ func (resovler *kafkaResolver[C]) Start() context.CancelFunc {
 func (resovler *kafkaResolver[C]) deferFn() {
 	err := resovler.consumers.Close()
 	if err != nil {
-		resovler.errorHandle(err)
+		resovler.errorHandle(errors.New("DeferFn Error : " + err.Error()))
 	}
 	resovler.producerUseWg.Wait()
 	for p := resovler.producerPool.Get(); p != nil; {
@@ -110,6 +111,7 @@ func (resovler *kafkaResolver[C]) deferFn() {
 
 func (resovler *kafkaResolver[C]) recvMessages(messages []producerMessage) {
 	if len(messages) == 0 {return}
+
 	for {
 		p, ok := resovler.producerPool.Get().(producer)
 		if !ok {continue}
@@ -119,7 +121,7 @@ func (resovler *kafkaResolver[C]) recvMessages(messages []producerMessage) {
 		defer resovler.producerPool.Put(p)
 
 		err := p.Send(messages)
-		if err != nil {resovler.errorHandle(err)}
+		if err != nil {resovler.errorHandle(errors.New("recvMessage Error : " + err.Error()))}
 		
 		break
 	}
@@ -137,10 +139,12 @@ func (resovler *kafkaResolver[C]) call(msg *RecvMessage[C]) {
 			handle(send,msg.Key,msg.Header,msg.Data)
 	
 			if send.err != nil {
-				resovler.errorHandle(send.err)
+				resovler.errorHandle(errors.New("call Error : " + send.err.Error()))
 				return
 			}
-	
+			if(send.topic == "") {
+				continue
+			}
 			sendMessage := &producerMessageImpl{
 				MessageKey: msg.Key,
 				MessageTopic: send.topic,
@@ -153,6 +157,7 @@ func (resovler *kafkaResolver[C]) call(msg *RecvMessage[C]) {
 }
 
 func (resovler *kafkaResolver[C]) loop(ctx context.Context) {
+	var ch = resovler.consumers.Channel()
 Loop:
 	for {
 		select {
@@ -163,8 +168,10 @@ Loop:
 			resovler.buf.SwapBuffer()
 			go resovler.recvMessages(resovler.buf.Read())
 			continue
-		case msg := <- resovler.consumers.Channel():
+		case msg := <-ch:
 			resovler.call(msg)
+		default:
+			continue
 		}
 	}
 }
