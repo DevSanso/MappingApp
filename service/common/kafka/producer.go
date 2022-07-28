@@ -1,6 +1,9 @@
 package kafka
 
 import (
+	"errors"
+
+
 	module "github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
@@ -13,6 +16,8 @@ type producerMessage interface {
 type producer struct {
 	origin *module.Producer
 }
+
+var TestNewProducer = newProducer
 
 func newProducer(config *ProducerConfig) producer {
 	p, err := module.NewProducer(config.toConfigMap())
@@ -43,7 +48,11 @@ func sendMessage(origin *module.Producer, key []byte, topic string, data produce
 	if err != nil {
 		return err
 	}
-	return origin.Produce(message, nil)
+	if err = origin.Produce(message, nil);err != nil {
+		return errors.New("produce send error : " +  err.Error())
+	}
+	origin.Flush(5)
+	return nil
 }
 
 func (p *producer) Send(data []producerMessage) (err error) {
