@@ -3,14 +3,14 @@ package kafka
 import (
 	"errors"
 
-
+	"google.golang.org/protobuf/proto"
 	module "github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 type producerMessage interface {
 	Key() []byte
 	Topic() string
-	Message() []byte
+	Message() proto.Message
 }
 
 type producer struct {
@@ -28,8 +28,11 @@ func newProducer(config *ProducerConfig) producer {
 }
 
 func makeMessage(key []byte, topic string, data producerMessage) (*module.Message, error) {
-	d := data.Message()
-
+	
+	d,err := proto.Marshal(data.Message())
+	if err != nil {
+		return nil,err
+	}
 	if key == nil {
 		return &module.Message{
 			Value:          d,
@@ -66,6 +69,7 @@ func (p *producer) Send(data []producerMessage) (err error) {
 }
 
 func (p *producer) SendOne(data producerMessage) (err error) {
+	
 	err = sendMessage(p.origin, data.Key(), data.Topic(), data)
 	return
 }

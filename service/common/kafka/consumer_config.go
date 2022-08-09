@@ -9,9 +9,7 @@ type ConsumersConfig[T any] struct{
 	Address string
 	GroupID string
 	Offset string
-	Count int
 	Topic string
-	EncodeMessageFunc func([]byte) (T,error)
 }
 
 func (c *ConsumersConfig[T])toConfigMap() *module.ConfigMap {
