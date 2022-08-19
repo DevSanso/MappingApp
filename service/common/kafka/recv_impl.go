@@ -14,7 +14,7 @@ type recvImpl[T any] struct {
 
 
 var (
-	ErrTimeoutGetMessage= k.ErrTimedOut
+	ErrTimeoutGetMessage= errors.New("ErrTimeoutGetMessage")
 	ErrCantCastGenericValue = errors.New("ErrCantCastGenericValue")
 )
 
@@ -43,7 +43,11 @@ func (ri *recvImpl[T])Recv(t time.Duration) (*T,error) {
 	}
 	
 	msg,err := ri.consumer.ReadMessage(t)
-	if err != nil {return nil,err}
+	
+	if cast,ok := err.(k.Error); ok {
+		if cast.Code() == k.ErrTimedOut {return nil,ErrTimeoutGetMessage}
+	}else if err != nil {return nil,err}
+
 	
 	err = proto.Unmarshal(msg.Value,ref)
 	return origin,err
