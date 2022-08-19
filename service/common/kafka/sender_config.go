@@ -1,16 +1,14 @@
 package kafka
 
-
 import (
 	module "github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-type ProducerConfig struct{
+type SenderConfig struct {
 	Address string
 }
 
-
-func (p *ProducerConfig)toConfigMap() *module.ConfigMap {
+func (p *SenderConfig) toConfigMap() *module.ConfigMap {
 	return &module.ConfigMap{
 		"bootstrap.servers": p.Address,
 	}
