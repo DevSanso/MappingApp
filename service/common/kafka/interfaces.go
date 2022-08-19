@@ -17,20 +17,15 @@ type Recv[T any] interface {
 	Close() error
 }
 
-
-type HandleContext[T any] interface {
-	Next(string,*T,...interface{}) error
-	Error(error,...interface{})	error
-	Send(key, topic string, idl proto.Message) error
-}
-type Handle[T any] func(HandleContext[T],T,...interface{}) error
+type SendFunc func(key, topic string, idl proto.Message) error
+type Handle[T any] func(SendFunc,*T) error
 
 
 
 type Resovler[T any] interface {
-	AddHandle(string,Handle[T])
-	DelHandle(string)
+	SetHandle(Handle[T]) error
+	
 
-	Start()
-	Stop()
+	Start() error
+	Stop() error
 }
