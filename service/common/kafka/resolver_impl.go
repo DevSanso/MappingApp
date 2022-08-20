@@ -23,10 +23,10 @@ func NewResolver[T any](config *ResovlerConfig) (Resovler[T], error) {
 	var s Sender
 	var err error
 
-	if r,err = NewRecv[T](config.recvConfig); err != nil {
+	if r,err = NewRecv[T](config.RecvConfig); err != nil {
 		return nil,err
 	}
-	if s,err = NewSender(config.senderConfig);err != nil {
+	if s,err = NewSender(config.SenderConfig);err != nil {
 		return nil,err
 	}
 

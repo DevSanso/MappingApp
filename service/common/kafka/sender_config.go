@@ -5,7 +5,7 @@ import (
 )
 
 type SenderConfig struct {
-	Address string
+	Address string `json:"address"`
 }
 
 func (p *SenderConfig) toConfigMap() *module.ConfigMap {
