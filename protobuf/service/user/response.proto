@@ -6,6 +6,38 @@ package user;
 option go_package = "proto/service/user";
 
 
+
 message Response{
+    message Privacy {
+        optional int32 age = 1;
+        optional float stature = 2;
+        optional float weight = 3;
+    }
+    enum Method {
+        CREATE = 0;
+        UPDATE = 1;
+        DELETE = 2;
+        READ = 3;
+    }
+    message Address {
+        string address1 = 1;
+        optional string address2 = 2;
+    }
+    
+    Method method = 1;
+    string userUuid = 2;
+    bool is_error = 3;
+
+    message ReadBody {
+        optional Privacy privacy = 1;
+        optional Address address = 2;
+    }
+
+
+    oneof body {
+        ReadBody read_body = 4;
+        string error = 5;
+    }
+
 
 }
