@@ -2,6 +2,13 @@ package kafka
 
 
 type ResovlerConfig struct {
-	senderConfig *SenderConfig
-	recvConfig *RecvConfig
+	SenderConfig *SenderConfig `json:"senderConfig"`
+	RecvConfig *RecvConfig `json:"recvConfig"`
+}
+
+func NewResolverConfig() *ResovlerConfig {
+	return &ResovlerConfig{
+		SenderConfig: &SenderConfig{},
+		RecvConfig: &RecvConfig{},
+	}
 }

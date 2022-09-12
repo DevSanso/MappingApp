@@ -5,10 +5,10 @@ import (
 )
 
 type RecvConfig struct {
-	Address string
-	GroupID string
-	Offset  string
-	Topic   string
+	Address string `json:"address"`
+	GroupID string `json:"groupID"`
+	Offset  string `json:"offset"`
+	Topic   string `json:"topic"`
 }
 
 func (c *RecvConfig) toConfigMap() *module.ConfigMap {

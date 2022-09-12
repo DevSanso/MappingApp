@@ -20,10 +20,70 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Response_Method int32
+
+const (
+	Response_CREATE Response_Method = 0
+	Response_UPDATE Response_Method = 1
+	Response_DELETE Response_Method = 2
+	Response_READ   Response_Method = 3
+)
+
+// Enum value maps for Response_Method.
+var (
+	Response_Method_name = map[int32]string{
+		0: "CREATE",
+		1: "UPDATE",
+		2: "DELETE",
+		3: "READ",
+	}
+	Response_Method_value = map[string]int32{
+		"CREATE": 0,
+		"UPDATE": 1,
+		"DELETE": 2,
+		"READ":   3,
+	}
+)
+
+func (x Response_Method) Enum() *Response_Method {
+	p := new(Response_Method)
+	*p = x
+	return p
+}
+
+func (x Response_Method) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Response_Method) Descriptor() protoreflect.EnumDescriptor {
+	return file_service_user_response_proto_enumTypes[0].Descriptor()
+}
+
+func (Response_Method) Type() protoreflect.EnumType {
+	return &file_service_user_response_proto_enumTypes[0]
+}
+
+func (x Response_Method) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Response_Method.Descriptor instead.
+func (Response_Method) EnumDescriptor() ([]byte, []int) {
+	return file_service_user_response_proto_rawDescGZIP(), []int{0, 0}
+}
+
 type Response struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Method   Response_Method `protobuf:"varint,1,opt,name=method,proto3,enum=user.Response_Method" json:"method,omitempty"`
+	UserUuid string          `protobuf:"bytes,2,opt,name=userUuid,proto3" json:"userUuid,omitempty"`
+	IsError  bool            `protobuf:"varint,3,opt,name=is_error,json=isError,proto3" json:"is_error,omitempty"`
+	// Types that are assignable to Body:
+	//	*Response_ReadBody_
+	//	*Response_Error
+	Body isResponse_Body `protobuf_oneof:"body"`
 }
 
 func (x *Response) Reset() {
@@ -58,14 +118,283 @@ func (*Response) Descriptor() ([]byte, []int) {
 	return file_service_user_response_proto_rawDescGZIP(), []int{0}
 }
 
+func (x *Response) GetMethod() Response_Method {
+	if x != nil {
+		return x.Method
+	}
+	return Response_CREATE
+}
+
+func (x *Response) GetUserUuid() string {
+	if x != nil {
+		return x.UserUuid
+	}
+	return ""
+}
+
+func (x *Response) GetIsError() bool {
+	if x != nil {
+		return x.IsError
+	}
+	return false
+}
+
+func (m *Response) GetBody() isResponse_Body {
+	if m != nil {
+		return m.Body
+	}
+	return nil
+}
+
+func (x *Response) GetReadBody() *Response_ReadBody {
+	if x, ok := x.GetBody().(*Response_ReadBody_); ok {
+		return x.ReadBody
+	}
+	return nil
+}
+
+func (x *Response) GetError() string {
+	if x, ok := x.GetBody().(*Response_Error); ok {
+		return x.Error
+	}
+	return ""
+}
+
+type isResponse_Body interface {
+	isResponse_Body()
+}
+
+type Response_ReadBody_ struct {
+	ReadBody *Response_ReadBody `protobuf:"bytes,4,opt,name=read_body,json=readBody,proto3,oneof"`
+}
+
+type Response_Error struct {
+	Error string `protobuf:"bytes,5,opt,name=error,proto3,oneof"`
+}
+
+func (*Response_ReadBody_) isResponse_Body() {}
+
+func (*Response_Error) isResponse_Body() {}
+
+type Response_Privacy struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Age     *int32   `protobuf:"varint,1,opt,name=age,proto3,oneof" json:"age,omitempty"`
+	Stature *float32 `protobuf:"fixed32,2,opt,name=stature,proto3,oneof" json:"stature,omitempty"`
+	Weight  *float32 `protobuf:"fixed32,3,opt,name=weight,proto3,oneof" json:"weight,omitempty"`
+}
+
+func (x *Response_Privacy) Reset() {
+	*x = Response_Privacy{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_service_user_response_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Response_Privacy) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Response_Privacy) ProtoMessage() {}
+
+func (x *Response_Privacy) ProtoReflect() protoreflect.Message {
+	mi := &file_service_user_response_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Response_Privacy.ProtoReflect.Descriptor instead.
+func (*Response_Privacy) Descriptor() ([]byte, []int) {
+	return file_service_user_response_proto_rawDescGZIP(), []int{0, 0}
+}
+
+func (x *Response_Privacy) GetAge() int32 {
+	if x != nil && x.Age != nil {
+		return *x.Age
+	}
+	return 0
+}
+
+func (x *Response_Privacy) GetStature() float32 {
+	if x != nil && x.Stature != nil {
+		return *x.Stature
+	}
+	return 0
+}
+
+func (x *Response_Privacy) GetWeight() float32 {
+	if x != nil && x.Weight != nil {
+		return *x.Weight
+	}
+	return 0
+}
+
+type Response_Address struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Address1 string  `protobuf:"bytes,1,opt,name=address1,proto3" json:"address1,omitempty"`
+	Address2 *string `protobuf:"bytes,2,opt,name=address2,proto3,oneof" json:"address2,omitempty"`
+}
+
+func (x *Response_Address) Reset() {
+	*x = Response_Address{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_service_user_response_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Response_Address) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Response_Address) ProtoMessage() {}
+
+func (x *Response_Address) ProtoReflect() protoreflect.Message {
+	mi := &file_service_user_response_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Response_Address.ProtoReflect.Descriptor instead.
+func (*Response_Address) Descriptor() ([]byte, []int) {
+	return file_service_user_response_proto_rawDescGZIP(), []int{0, 1}
+}
+
+func (x *Response_Address) GetAddress1() string {
+	if x != nil {
+		return x.Address1
+	}
+	return ""
+}
+
+func (x *Response_Address) GetAddress2() string {
+	if x != nil && x.Address2 != nil {
+		return *x.Address2
+	}
+	return ""
+}
+
+type Response_ReadBody struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Privacy *Response_Privacy `protobuf:"bytes,1,opt,name=privacy,proto3,oneof" json:"privacy,omitempty"`
+	Address *Response_Address `protobuf:"bytes,2,opt,name=address,proto3,oneof" json:"address,omitempty"`
+}
+
+func (x *Response_ReadBody) Reset() {
+	*x = Response_ReadBody{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_service_user_response_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Response_ReadBody) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Response_ReadBody) ProtoMessage() {}
+
+func (x *Response_ReadBody) ProtoReflect() protoreflect.Message {
+	mi := &file_service_user_response_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Response_ReadBody.ProtoReflect.Descriptor instead.
+func (*Response_ReadBody) Descriptor() ([]byte, []int) {
+	return file_service_user_response_proto_rawDescGZIP(), []int{0, 2}
+}
+
+func (x *Response_ReadBody) GetPrivacy() *Response_Privacy {
+	if x != nil {
+		return x.Privacy
+	}
+	return nil
+}
+
+func (x *Response_ReadBody) GetAddress() *Response_Address {
+	if x != nil {
+		return x.Address
+	}
+	return nil
+}
+
 var File_service_user_response_proto protoreflect.FileDescriptor
 
 var file_service_user_response_proto_rawDesc = []byte{
 	0x0a, 0x1b, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x2f, 0x72,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04, 0x75,
-	0x73, 0x65, 0x72, 0x22, 0x0a, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42,
-	0x14, 0x5a, 0x12, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x2f, 0x75, 0x73, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x65, 0x72, 0x22, 0xe5, 0x04, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x2d, 0x0a, 0x06, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e,
+	0x32, 0x15, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x2e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x52, 0x06, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x12,
+	0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x55, 0x75, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x55, 0x75, 0x69, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x69,
+	0x73, 0x5f, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x69,
+	0x73, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x12, 0x36, 0x0a, 0x09, 0x72, 0x65, 0x61, 0x64, 0x5f, 0x62,
+	0x6f, 0x64, 0x79, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x75, 0x73, 0x65, 0x72,
+	0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x42, 0x6f,
+	0x64, 0x79, 0x48, 0x00, 0x52, 0x08, 0x72, 0x65, 0x61, 0x64, 0x42, 0x6f, 0x64, 0x79, 0x12, 0x16,
+	0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52,
+	0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x1a, 0x7b, 0x0a, 0x07, 0x50, 0x72, 0x69, 0x76, 0x61, 0x63,
+	0x79, 0x12, 0x15, 0x0a, 0x03, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x48, 0x00,
+	0x52, 0x03, 0x61, 0x67, 0x65, 0x88, 0x01, 0x01, 0x12, 0x1d, 0x0a, 0x07, 0x73, 0x74, 0x61, 0x74,
+	0x75, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x02, 0x48, 0x01, 0x52, 0x07, 0x73, 0x74, 0x61,
+	0x74, 0x75, 0x72, 0x65, 0x88, 0x01, 0x01, 0x12, 0x1b, 0x0a, 0x06, 0x77, 0x65, 0x69, 0x67, 0x68,
+	0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x02, 0x48, 0x02, 0x52, 0x06, 0x77, 0x65, 0x69, 0x67, 0x68,
+	0x74, 0x88, 0x01, 0x01, 0x42, 0x06, 0x0a, 0x04, 0x5f, 0x61, 0x67, 0x65, 0x42, 0x0a, 0x0a, 0x08,
+	0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x72, 0x65, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x77, 0x65, 0x69,
+	0x67, 0x68, 0x74, 0x1a, 0x53, 0x0a, 0x07, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x1a,
+	0x0a, 0x08, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x31, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x08, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x31, 0x12, 0x1f, 0x0a, 0x08, 0x61, 0x64,
+	0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x08,
+	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0x88, 0x01, 0x01, 0x42, 0x0b, 0x0a, 0x09, 0x5f,
+	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x32, 0x1a, 0x90, 0x01, 0x0a, 0x08, 0x52, 0x65, 0x61,
+	0x64, 0x42, 0x6f, 0x64, 0x79, 0x12, 0x35, 0x0a, 0x07, 0x70, 0x72, 0x69, 0x76, 0x61, 0x63, 0x79,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x50, 0x72, 0x69, 0x76, 0x61, 0x63, 0x79, 0x48, 0x00,
+	0x52, 0x07, 0x70, 0x72, 0x69, 0x76, 0x61, 0x63, 0x79, 0x88, 0x01, 0x01, 0x12, 0x35, 0x0a, 0x07,
+	0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e,
+	0x75, 0x73, 0x65, 0x72, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x41, 0x64,
+	0x64, 0x72, 0x65, 0x73, 0x73, 0x48, 0x01, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73,
+	0x88, 0x01, 0x01, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x70, 0x72, 0x69, 0x76, 0x61, 0x63, 0x79, 0x42,
+	0x0a, 0x0a, 0x08, 0x5f, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x22, 0x36, 0x0a, 0x06, 0x4d,
+	0x65, 0x74, 0x68, 0x6f, 0x64, 0x12, 0x0a, 0x0a, 0x06, 0x43, 0x52, 0x45, 0x41, 0x54, 0x45, 0x10,
+	0x00, 0x12, 0x0a, 0x0a, 0x06, 0x55, 0x50, 0x44, 0x41, 0x54, 0x45, 0x10, 0x01, 0x12, 0x0a, 0x0a,
+	0x06, 0x44, 0x45, 0x4c, 0x45, 0x54, 0x45, 0x10, 0x02, 0x12, 0x08, 0x0a, 0x04, 0x52, 0x45, 0x41,
+	0x44, 0x10, 0x03, 0x42, 0x06, 0x0a, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x42, 0x14, 0x5a, 0x12, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x75, 0x73, 0x65,
+	0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -80,16 +409,25 @@ func file_service_user_response_proto_rawDescGZIP() []byte {
 	return file_service_user_response_proto_rawDescData
 }
 
-var file_service_user_response_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_service_user_response_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_service_user_response_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_service_user_response_proto_goTypes = []interface{}{
-	(*Response)(nil), // 0: user.Response
+	(Response_Method)(0),      // 0: user.Response.Method
+	(*Response)(nil),          // 1: user.Response
+	(*Response_Privacy)(nil),  // 2: user.Response.Privacy
+	(*Response_Address)(nil),  // 3: user.Response.Address
+	(*Response_ReadBody)(nil), // 4: user.Response.ReadBody
 }
 var file_service_user_response_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: user.Response.method:type_name -> user.Response.Method
+	4, // 1: user.Response.read_body:type_name -> user.Response.ReadBody
+	2, // 2: user.Response.ReadBody.privacy:type_name -> user.Response.Privacy
+	3, // 3: user.Response.ReadBody.address:type_name -> user.Response.Address
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_service_user_response_proto_init() }
@@ -110,19 +448,63 @@ func file_service_user_response_proto_init() {
 				return nil
 			}
 		}
+		file_service_user_response_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Response_Privacy); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_service_user_response_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Response_Address); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_service_user_response_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Response_ReadBody); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
+	file_service_user_response_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*Response_ReadBody_)(nil),
+		(*Response_Error)(nil),
+	}
+	file_service_user_response_proto_msgTypes[1].OneofWrappers = []interface{}{}
+	file_service_user_response_proto_msgTypes[2].OneofWrappers = []interface{}{}
+	file_service_user_response_proto_msgTypes[3].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_service_user_response_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   1,
+			NumEnums:      1,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_service_user_response_proto_goTypes,
 		DependencyIndexes: file_service_user_response_proto_depIdxs,
+		EnumInfos:         file_service_user_response_proto_enumTypes,
 		MessageInfos:      file_service_user_response_proto_msgTypes,
 	}.Build()
 	File_service_user_response_proto = out.File

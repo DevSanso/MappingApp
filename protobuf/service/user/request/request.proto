@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "proto/service/user";
+
+
+message Request{
+
+    message Privacy {
+        optional int32 age = 1;
+        optional float stature = 2;
+        optional float weight = 3;
+    }
+    enum Method {
+        CREATE = 0;
+        UPDATE = 1;
+        DELETE = 2;
+        READ = 3;
+    }
+    message Address {
+        string address1 = 1;
+        optional string address2 = 2;
+    }
+
+    message ReadBody {
+        bool read_privacy = 1;
+        bool read_address = 2;
+    }
+
+    message OtherBody {
+        optional Privacy privacy = 1;
+        optional Address address = 2;
+    }
+
+
+    Method method = 1;
+    string userUuid = 2;
+
+    oneof body {
+        ReadBody read_body = 3;
+        OtherBody other_body = 4;
+    }
+}
