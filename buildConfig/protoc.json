@@ -1,6 +1,10 @@
 {
     "basePath":"./protobuf",
     "outputRootPath" : "./",
+    "entrypoint" : {
+        "request" : "request.proto",
+        "reeponse" : "response.proto"
+    },
 
     "target" : [
         {
